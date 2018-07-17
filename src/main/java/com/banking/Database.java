@@ -45,8 +45,11 @@ public class Database {
     }
 
     public void deinit() throws IOException {
-        //TODO: save into tmp first
-        mapper.writeValue(new File(dbFile), accounts.values());
+        File old = new File(dbFile);
+        old.renameTo(new File(dbFile + ".old"));
+        File resultFile = new File(dbFile);
+        mapper.writeValue(resultFile, accounts.values());
+
     }
 
     public void init() throws IOException {
