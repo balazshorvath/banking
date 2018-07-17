@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import lombok.Builder;
 import lombok.Value;
 
-import java.util.Set;
+import java.util.List;
 
 @JsonDeserialize(builder = Account.AccountBuilder.class)
 @Builder
@@ -15,7 +15,7 @@ public class Account {
     private String owner;
     private String accountId;
     private Double balance;
-    private Set<Transaction> history;
+    private List<Transaction> history;
 
     @JsonIgnore
     public AccountBuilder getCloneBuilder() {

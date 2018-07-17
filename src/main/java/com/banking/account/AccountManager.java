@@ -7,8 +7,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class AccountManager {
     private final Database database;
@@ -21,7 +24,7 @@ public class AccountManager {
 
     public void createAccount(String owner) {
         Account account = database.setAccount(
-                Account.builder().owner(owner).balance(0.0D).history(new HashSet<>()).build()
+                Account.builder().owner(owner).balance(0.0D).history(new ArrayList<>()).build()
         );
         System.out.printf("New account: %s\n", account);
     }
@@ -56,8 +59,10 @@ public class AccountManager {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
 
-        // TODO: This should be ordered by date
-        objectMapper.writeValue(System.out, account.getHistory());
+        List<Transaction> transactions = account.getHistory().stream().sorted(Comparator.comparing
+                (Transaction::getDate)).collect(
+                Collectors.toList());
+        objectMapper.writeValue(System.out, transactions);
     }
 
     public void transfer(String from, String to, Double amount) {
